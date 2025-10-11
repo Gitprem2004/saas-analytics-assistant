@@ -21,7 +21,7 @@ ChartJS.register(
   Legend,
   ArcElement
 );
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_URL = 'https://saas-analytics-assistant.onrender.com';
 
 interface QueryResult {
   success: boolean;

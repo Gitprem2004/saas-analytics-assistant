@@ -24,7 +24,11 @@ app = FastAPI(
 # Enable CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://saas-analytics-assistant.vercel.app",  # Add your Vercel URL
+        "https://saas-analytics-assistant-*.vercel.app"  # Also allow preview deployments
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
