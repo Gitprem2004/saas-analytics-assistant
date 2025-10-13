@@ -11,6 +11,7 @@ from .models.saas_models import User
 from .config import settings
 from fastapi.responses import JSONResponse
 from fastapi import Request
+from .config import settings
 
 
 load_dotenv()
@@ -24,16 +25,11 @@ app = FastAPI(
 # Enable CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://saas-analytics-assistant.vercel.app",  # Add your Vercel URL
-        "https://saas-analytics-assistant-*.vercel.app"  # Also allow preview deployments
-    ],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # Initialize AI service
 ai_service = SaaSAnalyticsAI()
 

@@ -20,10 +20,12 @@ class Settings:
         origins = [
             "http://localhost:3000",
             "http://localhost:8000",
+            "https://saas-analytics-assistant.vercel.app",
+            "https://saas-analytics-assistant-git-main-gitprem2004s-projects.vercel.app",
         ]
         
-        # Add production frontend URL
-        frontend_url = os.getenv("http://localhost:8000", "")
+        # Add production frontend URL from environment
+        frontend_url = os.getenv("FRONTEND_URL", "")
         if frontend_url:
             origins.append(frontend_url)
             
