@@ -21,7 +21,12 @@ ChartJS.register(
   Legend,
   ArcElement
 );
-const API_URL = 'https://saas-analytics-assistant.onrender.com';
+
+// 🔹 Auto-detect backend URL
+// 🔹 Fully dynamic API URL
+const API_URL = process.env.REACT_APP_API_URL || 'https://saas-analytics-assistant.onrender.com';
+console.log("Backend URL:", API_URL);
+
 
 interface QueryResult {
   success: boolean;
@@ -42,7 +47,7 @@ function App() {
   const [result, setResult] = useState<QueryResult | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // 🔹 New state for query history
+  // 🔹 Query history
   const [queryHistory, setQueryHistory] = useState<string[]>([]);
 
   const handleQuery = async () => {
@@ -67,7 +72,6 @@ function App() {
         const value = Object.values(firstDataPoint)[0] as string;
         const label = Object.keys(firstDataPoint)[0].replace('_', ' ').toUpperCase();
 
-        // Determine type based on data length
         const resultType = data.result.data.length > 1 ? 'table' : 'metric';
 
         setResult({
@@ -82,7 +86,7 @@ function App() {
           }
         });
 
-        // 🔹 Update query history (keep last 5)
+        // 🔹 Keep last 5 queries
         setQueryHistory(prev => [query, ...prev.slice(0, 4)]);
       } else {
         setResult({
@@ -93,7 +97,7 @@ function App() {
     } catch (error) {
       setResult({
         success: false,
-        error: 'Failed to connect to backend. Make sure the API server is running on localhost:8000'
+        error: 'Failed to connect to backend. Make sure the API server is running.'
       });
     } finally {
       setLoading(false);
@@ -102,7 +106,6 @@ function App() {
 
   const handleSampleQuery = (sampleQuery: string) => {
     setQuery(sampleQuery);
-    // 🔹 Also push to history when clicked
     setQueryHistory(prev => [sampleQuery, ...prev.slice(0, 4)]);
   };
 
@@ -113,7 +116,7 @@ function App() {
     }
   };
 
-  // 🔹 CSV Export function
+  // 🔹 CSV Export
   const exportToCSV = () => {
     if (!result?.result?.data) return;
 
@@ -132,7 +135,7 @@ function App() {
     a.click();
   };
 
-  // 🔥 Chart Rendering Function
+  // 🔥 Chart Rendering
   const renderChart = () => {
     if (!result?.result?.data || result.result.data.length <= 1) return null;
 
@@ -174,22 +177,17 @@ function App() {
       },
     };
 
-    // Auto-switch: use Pie if <=5 categories, else Bar
-    if (labels.length <= 5) {
-      return (
-        <div style={{
-          maxWidth: '500px',
-          margin: '20px auto',
-          background: 'white',
-          padding: '20px',
-          borderRadius: '8px'
-        }}>
-          <Pie data={chartData} options={options} />
-        </div>
-      );
-    }
-
-    return (
+    return labels.length <= 5 ? (
+      <div style={{
+        maxWidth: '500px',
+        margin: '20px auto',
+        background: 'white',
+        padding: '20px',
+        borderRadius: '8px'
+      }}>
+        <Pie data={chartData} options={options} />
+      </div>
+    ) : (
       <div style={{
         maxWidth: '500px',
         margin: '20px auto',
@@ -202,7 +200,7 @@ function App() {
     );
   };
 
-  // 🔹 Your original DataTable function
+  // 🔹 Data Table
   const renderDataTable = () => {
     if (!result?.result?.data || result.result.data.length <= 1) return null;
 
@@ -239,10 +237,7 @@ function App() {
                 background: idx % 2 === 0 ? 'white' : '#f9f9f9'
               }}>
                 {keys.map((key, keyIdx) => (
-                  <td key={keyIdx} style={{
-                    padding: '12px',
-                    color: '#333'
-                  }}>
+                  <td key={keyIdx} style={{ padding: '12px', color: '#333' }}>
                     {row[key]}
                   </td>
                 ))}
@@ -270,30 +265,17 @@ function App() {
           boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
         }}>
           <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-            <h1 style={{
-              color: '#333',
-              fontSize: '2.5rem',
-              marginBottom: '10px',
-              fontWeight: '600'
-            }}>
+            <h1 style={{ color: '#333', fontSize: '2.5rem', marginBottom: '10px', fontWeight: '600' }}>
               🚀 SaaS Analytics Assistant
             </h1>
-            <p style={{
-              color: '#666',
-              fontSize: '1.1rem',
-              margin: '0'
-            }}>
+            <p style={{ color: '#666', fontSize: '1.1rem', margin: '0' }}>
               Ask questions about your business data in natural language
             </p>
           </div>
 
           {/* Sample Queries */}
           <div style={{ marginBottom: '20px' }}>
-            <h3 style={{
-              color: '#555',
-              fontSize: '1.1rem',
-              marginBottom: '10px'
-            }}>
+            <h3 style={{ color: '#555', fontSize: '1.1rem', marginBottom: '10px' }}>
               Try these sample queries:
             </h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -318,7 +300,7 @@ function App() {
             </div>
           </div>
 
-          {/* 🔹 Query History */}
+          {/* Query History */}
           {queryHistory.length > 0 && (
             <div style={{ marginTop: '20px', marginBottom: '20px' }}>
               <h3 style={{ color: '#555', fontSize: '1rem' }}>Recent Queries:</h3>
@@ -418,7 +400,7 @@ function App() {
 
                   {result.result.type === 'table' && result.result.data.length > 1 && renderChart()}
 
-                  {/* 🔹 CSV Export Button */}
+                  {/* CSV Export */}
                   {result.result.data.length > 1 && (
                     <div style={{ textAlign: 'right', marginBottom: '10px' }}>
                       <button onClick={exportToCSV} style={{
@@ -475,7 +457,7 @@ function App() {
             color: '#888',
             fontSize: '0.9rem'
           }}>
-            🔥 Built with React + FastAPI + OpenAI | Currently showing demo data
+            🔥 Built with React + FastAPI + Gemini Pro | Currently showing demo data
           </div>
         </div>
       </div>
