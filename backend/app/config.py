@@ -19,7 +19,6 @@ class Settings:
     def CORS_ORIGINS(self) -> List[str]:
         origins = [
             "http://localhost:3000",
-            "http://localhost:8000",
             "https://saas-analytics-assistant.vercel.app",
             "https://saas-analytics-assistant-git-main-gitprem2004s-projects.vercel.app",
         ]
