@@ -23,7 +23,7 @@ class Settings:
         ]
         
         # Add production frontend URL from environment
-        frontend_url = os.getenv("http://localhost:8000", "")
+        frontend_url = os.getenv("FRONTEND_URL", "")
         if frontend_url:
             origins.append(frontend_url)
             
