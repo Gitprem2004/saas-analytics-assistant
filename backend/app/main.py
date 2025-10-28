@@ -19,7 +19,7 @@ load_dotenv()
 app = FastAPI(
     title="SaaS Analytics Assistant API",
     description="AI-powered analytics for SaaS businesses",
-    version="1.0.0"
+    version="0.115.0"
 )
 
 # Enable CORS for React frontend
@@ -116,7 +116,11 @@ async def initialize_database(db: Session = Depends(get_db)):
 # Update CORS middleware:
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=[
+        "http://localhost:3000",
+        "https://saas-analytics-assistant.vercel.app",
+        "https://*.vercel.app",  # All Vercel preview deployments
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
