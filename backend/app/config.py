@@ -6,7 +6,7 @@ load_dotenv()
 
 class Settings:
     # API Keys
-    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", " ")
     
     # Database
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./saas_analytics.db")
@@ -19,12 +19,11 @@ class Settings:
     def CORS_ORIGINS(self) -> List[str]:
         origins = [
             "http://localhost:3000",
-            "https://saas-analytics-assistant.vercel.app",
-            "https://saas-analytics-assistant-git-main-gitprem2004s-projects.vercel.app",
+            "http://localhost:8000",
         ]
         
         # Add production frontend URL from environment
-        frontend_url = os.getenv("FRONTEND_URL", "")
+        frontend_url = os.getenv("http://localhost:8000", "")
         if frontend_url:
             origins.append(frontend_url)
             

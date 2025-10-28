@@ -24,7 +24,7 @@ ChartJS.register(
 
 // 🔹 Auto-detect backend URL
 // 🔹 Fully dynamic API URL
-const API_URL = process.env.REACT_APP_API_URL || 'https://saas-analytics-assistant.onrender.com';
+const API_URL = 'http://localhost:8000';
 console.log("Backend URL:", API_URL);
 
 
